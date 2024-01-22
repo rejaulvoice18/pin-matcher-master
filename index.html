@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input class="form-control" type="text" id="displayNumber">
+                    <button class="generate-btn" id="pin_generator" onclick="generatePin()">Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input class="form-control" type="text" id="calculator_display">
+                    <div class="numbers">
+                        <div class="calc-body" id="calc_body">
+                            <div class="calc-button-row">
+                                <div class="button">7</div>
+                                <div class="button">8</div>
+                                <div class="button">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button">4</div>
+                                <div class="button">5</div>
+                                <div class="button">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button">1</div>
+                                <div class="button">2</div>
+                                <div class="button">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div class="button">B</div>
+                                <div class="button">0</div>
+                                <div class="button">C</div>
+                            </div>
+                            <div>
+                                <button onclick="matchPin()" type="submit" class="submit-btn">Submit</button>
+                                <p class="action-left"><span id="value_try">3</span> time try</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="notify-section">
+                <p id="inCorrectMessage" class="notify">❌ Pin Didn't Match, Please try again</p>
+                <p id="correctMessage" class="notify">✅ Pin Matched... Secret door is opening for you</p>
+            </div>
+        </div>
+
+        <!--JavaScript start from here-->
+        <script>
+            function pinGen() {
+                const random = Math.random() * 10000;
+                const fourDigitPin = (random + '').split('.')[0];
+               //=====================================================================
+                // random ar valur sathe double cotation deuar karone ata akhon 
+                // string ache tai fourDigitPin varible ar sathe .length deua jay.
+                // console.log(fourDigitPin);
+                //=====================================================================
+                if (fourDigitPin.length === 4) {
+                    return fourDigitPin;
+                }
+                else {
+                    return pinGen();
+                }
+            }
+            //=================================================================================
+            // document.getElementById('pin_generator').addEventListener('click',function(){
+            //     let fourDigitNumber = Math.random()*10000;
+            //     let roundedNumber = Math.round(fourDigitNumber);
+
+            //     document.getElementById('displayNumber').value = roundedNumber;
+            //     console.log(roundedNumber);
+            // })
+            //====================================================================================
+            function generatePin() {
+                document.getElementById('displayNumber').value = pinGen();
+            }
+
+            //Calculator 
+            const calculatorContainer = document.getElementById('calc_body')
+            calculatorContainer.addEventListener('click', function (event) {
+                let inputValue = event.target.innerText
+
+                if (isNaN(inputValue)) {
+                    //============================================================================
+                    // isNanN means is not a number => isNaN ar bracket ar vitor j variable deua 
+                    // acche tar vitor number thakle skip korbe abong letter gula k dhorbe.
+                    //============================================================================
+                    if(inputValue === 'B'){
+                        const displayValue = document.getElementById('calculator_display').value
+                        document.getElementById('calculator_display').value = displayValue.substring(0, displayValue.length - 1);
+                    }
+                    if(inputValue === 'C'){
+                        document.getElementById('calculator_display').value = '';
+                    }
+                }
+                else {
+                    document.getElementById('calculator_display').value += inputValue
+                }
+
+            })
+
+            // match pin
+
+            function matchPin() {
+                const pin = document.getElementById('displayNumber').value;
+                const calculatorValue = document.getElementById('calculator_display').value;
+
+                if (pin === calculatorValue) {
+                    errorMessage('block', 'none');
+                }
+                else {
+                    errorMessage('none', 'block');
+                }
+                howManyTry();
+            }
+            //pin matching correct incorrect message
+            function errorMessage(correct, incorrect) {
+                const correctMessage = document.getElementById('correctMessage');
+                correctMessage.style.display = correct
+                const inCorrectMessage = document.getElementById('inCorrectMessage');
+                inCorrectMessage.style.display = incorrect
+            }
+
+            var num = 0;
+            function howManyTry(){
+                num++;
+                document.getElementById('value_try').innerText = num;
+
+            }
+
+        </script>
+</body>
+
+</html>
